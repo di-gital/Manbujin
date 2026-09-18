@@ -1,5 +1,6 @@
 package com.revature.Manbujin.API;
 
+import com.revature.Manbujin.Utility.Money;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +11,7 @@ public class APITest {
     @Test
     public void login_fail_badcreds() {
         API api = new API();
-        /* Bad username, bad password that do not meet standads */
+        /* Bad username, bad password that do not meet standards */
         Assertions.assertFalse(api.login("username", "password"));
     }
 
@@ -51,13 +52,13 @@ public class APITest {
         API api = new API();
 
         long intended = 12345L;
-        Assertions.assertEquals(intended, api.parseMoney("$123.456789"));
+        Assertions.assertEquals(intended, Money.toCents("$123.456789"));
     }
 
     @Test
     public void negativeCents() {
         API api = new API();
-        Assertions.assertEquals(Long.MIN_VALUE, api.parseMoney("100.-10"));
+        Assertions.assertEquals(Long.MIN_VALUE, Money.toCents("100.-10"));
     }
 
     @Test
@@ -65,8 +66,8 @@ public class APITest {
         API api = new API();
 
         long intended = 10000L;
-        long amt0 = api.parseMoney("100.00");
-        long amt1 = api.parseMoney("$100");
+        long amt0 = Money.toCents("100.00");
+        long amt1 = Money.toCents("$100");
 
         Assertions.assertNotEquals(0L, amt0);
         Assertions.assertEquals(intended, amt0);

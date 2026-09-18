@@ -2,6 +2,7 @@ package com.revature.Manbujin.API;
 
 import com.revature.Manbujin.BusinessLogic.*;
 import com.revature.Manbujin.Repository.AccountRepo;
+import com.revature.Manbujin.Utility.Money;
 import com.revature.Manbujin.model.*;
 
 import java.util.Arrays;
@@ -112,7 +113,7 @@ public class API {
             return;
         }
 
-        long specBalance = parseMoney(amount);
+        long specBalance = Money.toCents(amount);
 
         if(specBalance == 0 || this.bankTransactions.deposit(ai, specBalance) == 0) {
             this.result = "No money was deposited. Check your prompt again.";
@@ -154,7 +155,7 @@ public class API {
             return;
         }
 
-        long specBalance = parseMoney(amount);
+        long specBalance = Money.toCents(amount);
 
         if(ai.getPin() != corrPin) {
             this.result = "Incorrect PIN";
@@ -170,7 +171,7 @@ public class API {
     }
 
     public void transfer(String src, String dest, String amount) {
-        long money = parseMoney(amount);
+        long money = Money.toCents(amount);
 
         if(money <= 0L) {
             this.result = "Zero, negative, or improperly formatted amount.";
@@ -373,43 +374,6 @@ public class API {
 
     public String getResult() {
         return this.result;
-    }
-
-    /**
-     * Ingest a String representing money and return
-     * a long, in cents.
-     *
-     * @author Nicholas DiGirolamo
-     * @param str, a string meant to hold a dollar amount.
-     *             This may be of the form `$DOLLARS.CENTS`
-     *             or `DOLLARS.CENTS`.
-     * @return long, the number of cents equivalent to the amount
-     * specified.
-     */
-    long parseMoney(String str) {
-        long dollars = 0, cents;
-
-        try {
-            String[] parts = str.split("\\.");
-
-            /* Remove dollar sign if and only if it is at the beginning,
-             * otherwise, rely on exception handling. */
-            if(parts[0].charAt(0) == '$')
-                parts[0] = parts[0].substring(1);
-
-            dollars = Long.parseLong(parts[0]);
-            cents = Long.parseLong(parts[1].substring(0, 2));
-        } catch(Exception e) {
-            if(e instanceof IndexOutOfBoundsException) {
-                return 100*dollars;
-            } else {
-                return 0L;
-            }
-        }
-
-        if(cents < 0) return Long.MIN_VALUE;
-
-        return 100*dollars + cents;
     }
 
     private int validatePin(String pin) {

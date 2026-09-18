@@ -21,10 +21,10 @@ public class Money {
             throw new IllegalArgumentException("Invalid amount: " + amount);
         }
 
-        long dollars = 0;
+        long dollars;
 
         if (parts[0].isEmpty()) {
-            dollars = Long.parseLong("0");
+            dollars = 0L;
         } else {
             dollars = Long.parseLong(parts[0]);
         }

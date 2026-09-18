@@ -41,7 +41,7 @@ public class CLIBank {
 
     protected static void printError(String str) {
         System.err.println(str);
-        System.err.println();
+        System.out.println(prompt);
     }
 
     protected static void register() {
